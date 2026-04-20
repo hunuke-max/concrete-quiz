@@ -11,6 +11,27 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 </head>
 <body data-page="result">
+<script>
+(function () {
+  try {
+    const settings = JSON.parse(localStorage.getItem("concreteQuizSettings") || "{}");
+    const session = JSON.parse(localStorage.getItem("concreteQuizSession") || "{}");
+    const result = JSON.parse(localStorage.getItem("concreteQuizResult") || "{}");
+
+    const theme =
+      (session && session.settings && session.settings.theme) ||
+      (result && result.settings && result.settings.theme) ||
+      (settings && settings.theme) ||
+      "light";
+
+    if (theme === "dark") {
+      document.body.classList.add("theme-dark");
+    }
+  } catch (e) {
+    // 何もしない
+  }
+})();
+</script>
   <div class="app-shell">
     <header class="page-header compact-header">
       <div class="header-inner">
