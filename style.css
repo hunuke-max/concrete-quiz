@@ -786,3 +786,65 @@ body.theme-dark .review-option-label {
   color: var(--text) !important;
 }
 
+/* ===== 問題画面ダークモード 最終上書き ===== */
+body.theme-dark .quiz-status-card,
+body.theme-dark #quizArea,
+body.theme-dark #quizFallback,
+body.theme-dark .question-stem,
+body.theme-dark #questionStem,
+body.theme-dark .options-list,
+body.theme-dark .option-button,
+body.theme-dark .explanation-box,
+body.theme-dark #feedbackResult,
+body.theme-dark .tag-chip,
+body.theme-dark .badge,
+body.theme-dark .badge-muted {
+  color: #eef3f8 !important;
+}
+
+body.theme-dark .question-stem,
+body.theme-dark #questionStem,
+body.theme-dark .question-stem *,
+body.theme-dark #questionStem *,
+body.theme-dark .option-button,
+body.theme-dark .option-button *,
+body.theme-dark .explanation-box,
+body.theme-dark .explanation-box *,
+body.theme-dark .tag-chip,
+body.theme-dark .badge,
+body.theme-dark .badge-muted {
+  color: #eef3f8 !important;
+  border-color: #2a3442 !important;
+}
+
+body.theme-dark .question-stem,
+body.theme-dark #questionStem {
+  background: #202733 !important;
+}
+
+body.theme-dark .option-button {
+  background: #171c24 !important;
+}
+
+body.theme-dark .option-button:hover {
+  background: #202733 !important;
+  border-color: #6aa8ff !important;
+}
+
+body.theme-dark .explanation-box {
+  background: #202733 !important;
+}
+
+body.theme-dark .badge,
+body.theme-dark .badge-muted,
+body.theme-dark .tag-chip {
+  background: #202733 !important;
+}
+
+body.theme-dark .question-table,
+body.theme-dark .question-table th,
+body.theme-dark .question-table td {
+  background: #171c24 !important;
+  color: #eef3f8 !important;
+  border-color: #2a3442 !important;
+}
