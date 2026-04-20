@@ -1,3 +1,20 @@
+body.theme-dark {
+  --bg: #0f131a;
+  --card: #171c24;
+  --text: #eef3f8;
+  --text-sub: #a7b3c2;
+  --line: #2a3442;
+  --primary: #6aa8ff;
+  --primary-dark: #8bbcff;
+  --secondary: #202733;
+  --success: #47c27d;
+  --success-bg: #13271c;
+  --danger: #ff7b7b;
+  --danger-bg: #2c1618;
+  --warning: #ffbf69;
+  --shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+  color-scheme: dark;
+}
 :root {
   --bg: #f3f6fb;
   --card: #ffffff;
@@ -34,7 +51,7 @@ body {
   margin: 0;
   font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #f8fbff 0%, #f3f6fb 100%);
+  background: var(--bg);
   line-height: 1.75;
   word-break: break-word;
   overflow-wrap: anywhere;
