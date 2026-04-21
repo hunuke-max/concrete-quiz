@@ -146,12 +146,10 @@
 
   function updateWrongQuestionHistory(resultAnswers) {
     const currentWrongIds = getWrongQuestionIds();
-
     const wrongSet = new Set(currentWrongIds);
 
     resultAnswers.forEach(function (item) {
       if (!item || !item.questionId) return;
-
       if (item.isCorrect) {
         wrongSet.delete(item.questionId);
       } else {
@@ -164,7 +162,6 @@
 
   function buildSession(settings) {
     const all = normalizeQuestions();
-
     let filtered = all;
 
     if (settings.category && settings.category !== 'all') {
@@ -205,7 +202,6 @@
   function loadQuizSession() {
     const raw = sessionStorage.getItem('quizSession');
     if (!raw) return null;
-
     try {
       return JSON.parse(raw);
     } catch (e) {
@@ -220,7 +216,6 @@
   function loadQuizResult() {
     const raw = sessionStorage.getItem('quizResult');
     if (!raw) return null;
-
     try {
       return JSON.parse(raw);
     } catch (e) {
@@ -248,12 +243,12 @@
     const session = buildSession(settings);
 
     if (settings.mode === 'wrongOnly' && !session.questions.length) {
-      alert('まだ復習用の問題がありません。通常モードで問題を解き、間違えた問題をためてから使ってください。');
+      alert('まだ復習用の問題がありません。通常モードで間違えた問題を作ってから使ってください。');
       return;
     }
 
     if (!session.questions.length) {
-      alert('問題データを読み込めませんでした。questions.js の形式を確認してください。');
+      alert('問題データを読み込めませんでした。questions.js を確認してください。');
       return;
     }
 
@@ -323,9 +318,7 @@
     const explanationBox = document.getElementById('explanationBox');
     const nextButton = document.getElementById('nextButton');
 
-    if (!optionsArea || !questionText || !nextButton) {
-      return;
-    }
+    if (!optionsArea || !questionText || !nextButton) return;
 
     let answered = false;
 
@@ -345,7 +338,7 @@
       if (progressText) progressText.textContent = number + ' / ' + total;
       if (progressFill) progressFill.style.width = ((number / total) * 100) + '%';
       if (questionNumber) questionNumber.textContent = '第' + number + '問';
-      questionText.textContent = current.question;
+      if (questionText) questionText.textContent = current.question;
 
       if (feedbackArea) feedbackArea.classList.add('hidden');
       if (answerStatus) {
@@ -353,7 +346,7 @@
         answerStatus.textContent = '';
       }
       if (explanationBox) explanationBox.innerHTML = '';
-      nextButton.classList.add('hidden');
+      if (nextButton) nextButton.classList.add('hidden');
 
       optionsArea.innerHTML = '';
 
@@ -428,8 +421,10 @@
             accuracyBadge.textContent = '正答率 ' + newAccuracy + '%';
           }
 
-          nextButton.textContent = session.currentIndex >= session.questions.length - 1 ? '結果を見る' : '次へ';
-          nextButton.classList.remove('hidden');
+          if (nextButton) {
+            nextButton.textContent = session.currentIndex >= session.questions.length - 1 ? '結果を見る' : '次へ';
+            nextButton.classList.remove('hidden');
+          }
         });
 
         optionsArea.appendChild(button);
@@ -530,14 +525,9 @@
   }
 
   function boot() {
-    try {
-      initTopPage();
-      initQuizPage();
-      initResultPage();
-    } catch (e) {
-      console.error(e);
-      alert('JavaScriptエラーが発生しました。app.js を更新後、再読み込みしてください。');
-    }
+    initTopPage();
+    initQuizPage();
+    initResultPage();
   }
 
   if (document.readyState === 'loading') {
