@@ -1,21 +1,24 @@
-const CACHE_NAME = 'concrete-gishi-v20260421-8';
+const CACHE_NAME = 'concrete-gishi-v20260422-2';
 
 const APP_SHELL = [
-  '/icon/',
-  '/icon/index.html',
-  '/icon/quiz.html',
-  '/icon/result.html',
-  '/icon/style.css?v=20260421-6',
-  '/icon/app.js?v=20260421-6',
-  '/icon/questions.js?v=20260421-6',
-  '/icon/mock-exam.js?v=20260421-6',
-  '/icon/manifest.webmanifest',
-  '/icon/icon-192.png',
-  '/icon/icon-512.png'
+  '/concrete-quiz/',
+  '/concrete-quiz/index.html',
+  '/concrete-quiz/quiz.html',
+  '/concrete-quiz/result.html',
+  '/concrete-quiz/style.css?v=20260421-6',
+  '/concrete-quiz/app.js?v=20260421-6',
+  '/concrete-quiz/questions.js?v=20260421-6',
+  '/concrete-quiz/mock-exam.js?v=20260421-6',
+  '/concrete-quiz/manifest.webmanifest',
+  '/concrete-quiz/icon-192.png',
+  '/concrete-quiz/icon-512.png'
 ];
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -50,7 +53,7 @@ self.addEventListener('fetch', (event) => {
           });
           return response;
         })
-        .catch(() => caches.match('./index.html'));
+        .catch(() => caches.match('/concrete-quiz/index.html'));
     })
   );
 });
