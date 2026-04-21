@@ -807,3 +807,118 @@ body.theme-dark .text-incorrect {
     color: inherit;
   }
 }
+.mock-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mock-compact-card {
+  padding: 10px;
+  box-shadow: none;
+}
+
+.mock-compact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mock-qno {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.mock-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2rem;
+  min-height: 2.2rem;
+  border-radius: 999px;
+  font-weight: 900;
+  border: 1px solid transparent;
+}
+
+.mock-status-ok {
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: var(--success-border);
+}
+
+.mock-status-ng {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+
+body.theme-dark .mock-status-ok {
+  background: #1b3e2a;
+  color: #d8ffe7;
+  border-color: #5dcd8d;
+}
+
+body.theme-dark .mock-status-ng {
+  background: #53272d;
+  color: #ffe0e3;
+  border-color: #ff8d99;
+}
+
+@media (max-width: 768px) {
+  .mock-compact-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media print {
+  .result-card {
+    padding: 10mm !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 6mm !important;
+    margin-bottom: 6mm !important;
+  }
+
+  .review-section .section-title {
+    margin-bottom: 4mm !important;
+  }
+
+  .mock-compact-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 3mm !important;
+  }
+
+  .mock-compact-card {
+    padding: 2.5mm !important;
+    border: 1px solid #bbb !important;
+    border-radius: 2mm !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .mock-status {
+    min-width: 8mm !important;
+    min-height: 8mm !important;
+    font-size: 11pt !important;
+  }
+
+  .mock-qno {
+    font-size: 10pt !important;
+  }
+
+  .review-question,
+  .review-answer-block,
+  .review-explanation {
+    display: none !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+}

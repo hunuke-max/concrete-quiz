@@ -68,37 +68,42 @@
     return [];
   }
 
+  function normalizeQuestion(q, index) {
+    if (!q || typeof q !== 'object') return null;
+
+    var options = Array.isArray(q.options) ? q.options.slice() : [];
+    var answerIndex = Number(q.answer);
+
+    if (!Number.isInteger(answerIndex) && typeof q.answerIndex === 'number') {
+      answerIndex = Number(q.answerIndex);
+    }
+
+    if (!Number.isInteger(answerIndex) && typeof q.correct === 'number') {
+      answerIndex = Number(q.correct);
+    }
+
+    if (!Number.isInteger(answerIndex)) {
+      answerIndex = 0;
+    }
+
+    return {
+      id: q.id || ('q' + (index + 1)),
+      category: q.category || 'all',
+      categoryName: q.categoryName || '',
+      year: q.year || null,
+      question: q.question || q.stem || '問題文が設定されていません。',
+      options: options,
+      answer: answerIndex,
+      explanation: q.explanation || ''
+    };
+  }
+
   function normalizeQuestions() {
     var source = getQuestionSource();
 
     return source
       .map(function (q, index) {
-        if (!q || typeof q !== 'object') return null;
-
-        var options = Array.isArray(q.options) ? q.options.slice() : [];
-        var answerIndex = Number(q.answer);
-
-        if (!Number.isInteger(answerIndex) && typeof q.answerIndex === 'number') {
-          answerIndex = Number(q.answerIndex);
-        }
-
-        if (!Number.isInteger(answerIndex) && typeof q.correct === 'number') {
-          answerIndex = Number(q.correct);
-        }
-
-        if (!Number.isInteger(answerIndex)) {
-          answerIndex = 0;
-        }
-
-        return {
-          id: q.id || ('q' + (index + 1)),
-          category: q.category || 'all',
-          categoryName: q.categoryName || '',
-          question: q.question || q.stem || '問題文が設定されていません。',
-          options: options,
-          answer: answerIndex,
-          explanation: q.explanation || ''
-        };
+        return normalizeQuestion(q, index);
       })
       .filter(function (q) {
         return q && q.options.length >= 2;
@@ -300,8 +305,16 @@
   function buildMockSession(patternName, theme) {
     if (!window.MOCK_EXAM || !window.MOCK_EXAM.getPatternQuestions) return null;
 
-    var questions = window.MOCK_EXAM.getPatternQuestions(patternName);
+    var rawQuestions = window.MOCK_EXAM.getPatternQuestions(patternName);
     var meta = window.MOCK_EXAM.getPatternMeta(patternName);
+
+    var questions = rawQuestions
+      .map(function (q, index) {
+        return normalizeQuestion(q, index);
+      })
+      .filter(function (q) {
+        return q && q.options.length >= 2;
+      });
 
     return {
       mode: 'mock',
@@ -705,25 +718,14 @@
   }
 
   function buildMockReviewHtml(item, index) {
-    var selectedText = item.options[item.selectedIndex] || '';
-    var correctText = item.options[item.correctIndex] || '';
+    var statusClass = item.isCorrect ? 'mock-status-ok' : 'mock-status-ng';
+    var statusText = item.isCorrect ? '○' : '×';
 
     return '' +
-      '<article class="result-question-card">' +
-        '<div class="review-top">' +
-          '<div class="review-number">第' + (index + 1) + '問</div>' +
-          '<div class="review-badge ' + (item.isCorrect ? 'review-badge-correct' : 'review-badge-incorrect') + '">' +
-            (item.isCorrect ? '正解' : '不正解') +
-          '</div>' +
-        '</div>' +
-        '<div class="review-question">' + escapeHtml(item.question) + '</div>' +
-        '<div class="review-answer-block">' +
-          '<div class="review-line"><span class="review-label">あなたの解答</span><span class="review-user ' + (item.isCorrect ? 'text-correct' : 'text-incorrect') + '">' +
-            escapeHtml(String.fromCharCode(65 + item.selectedIndex) + '. ' + selectedText) +
-          '</span></div>' +
-          '<div class="review-line"><span class="review-label">正解</span><span class="review-correct text-correct">' +
-            escapeHtml(String.fromCharCode(65 + item.correctIndex) + '. ' + correctText) +
-          '</span></div>' +
+      '<article class="result-question-card mock-compact-card">' +
+        '<div class="mock-compact-row">' +
+          '<span class="mock-qno">Q' + (index + 1) + '</span>' +
+          '<span class="mock-status ' + statusClass + '">' + statusText + '</span>' +
         '</div>' +
       '</article>';
   }
@@ -799,8 +801,9 @@
 
     if (isMock) {
       if (categoryValue) categoryValue.textContent = result.settings.mockDisplayName || '模擬試験';
-      if (resultLead) resultLead.textContent = '模擬試験の結果です。解説は表示していません。';
+      if (resultLead) resultLead.textContent = '模擬試験の結果です。問題1〜40の合否を一覧表示します。';
       if (cumulativeStatsSection) cumulativeStatsSection.style.display = 'none';
+      if (reviewList) reviewList.classList.add('mock-compact-grid');
     } else {
       if (result.settings && result.settings.mode === 'weakCategory' && result.settings.weakCategory) {
         if (categoryValue) categoryValue.textContent = categoryLabel(result.settings.weakCategory);
