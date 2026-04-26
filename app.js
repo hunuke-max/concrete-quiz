@@ -21,12 +21,152 @@
   }
 
   function escapeHtml(value) {
-    return String(value)
+    return String(value ?? '')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  function renderDataTable(tableData, className) {
+    if (!tableData || !Array.isArray(tableData.rows)) return '';
+
+    var headers = Array.isArray(tableData.headers) ? tableData.headers : [];
+
+    var thead = headers.length
+      ? '<thead><tr>' +
+          headers.map(function (header) {
+            return '<th>' + escapeHtml(header) + '</th>';
+          }).join('') +
+        '</tr></thead>'
+      : '';
+
+    var tbody = '<tbody>' +
+      tableData.rows.map(function (row) {
+        if (!Array.isArray(row)) return '';
+        return '<tr>' +
+          row.map(function (cell) {
+            return '<td>' + escapeHtml(cell) + '</td>';
+          }).join('') +
+        '</tr>';
+      }).join('') +
+    '</tbody>';
+
+    return '' +
+      '<div class="' + className + '-wrap">' +
+        '<table class="' + className + '">' +
+          thead +
+          tbody +
+        '</table>' +
+      '</div>';
+  }
+
+  function renderImage(imagePath, altText, className) {
+    if (!imagePath) return '';
+
+    return '' +
+      '<div class="' + className + '-wrap">' +
+        '<img src="' + escapeHtml(imagePath) + '" alt="' + escapeHtml(altText) + '" class="' + className + '">' +
+      '</div>';
+  }
+function renderQuestionMeta(question) {
+  var id = question.id || '--';
+  var year = question.year || '--';
+  var category = question.category || '--';
+  var categoryName = question.categoryName || categoryLabel(category);
+
+  return '' +
+    '<div class="question-meta">' +
+      '<span class="question-meta-item">ID: ' + escapeHtml(id) + '</span>' +
+      '<span class="question-meta-item">年度: ' + escapeHtml(year) + '</span>' +
+      '<span class="question-meta-item">分野: ' + escapeHtml(category + ' ' + categoryName) + '</span>' +
+    '</div>';
+}
+ function renderQuestionBody(question) {
+  var html = '';
+
+  html += renderQuestionMeta(question);
+
+  html += '<div class="question-stem">' + escapeHtml(question.stem || question.question || '') + '</div>';
+
+  if (question.stemTable) {
+    html += renderDataTable(question.stemTable, 'question-table');
+  }
+
+  if (question.stemImage) {
+    html += renderImage(question.stemImage, '問題画像', 'question-image');
+  }
+
+  return html;
+}
+
+  function renderExplanationBody(question) {
+    var html = '';
+    var correctText = question.options && question.options[question.answer]
+      ? question.options[question.answer]
+      : '';
+
+    html += '<div class="explanation-title">解説</div>';
+    html += '<div class="explanation-answer">正解: ' +
+      escapeHtml(String.fromCharCode(65 + question.answer) + '. ' + correctText) +
+    '</div>';
+
+    html += '<div class="explanation-body">' +
+      escapeHtml(question.explanation || '解説は未設定です。') +
+    '</div>';
+
+    if (question.explanationTable) {
+      html += renderDataTable(question.explanationTable, 'explanation-table');
+    }
+
+    if (question.explanationImage) {
+      html += renderImage(question.explanationImage, '解説画像', 'explanation-image');
+    }
+
+    return html;
+  }
+
+  function renderReviewQuestionBody(item) {
+  var html = '';
+
+  html += renderQuestionMeta({
+    id: item.questionId,
+    year: item.year,
+    category: item.category,
+    categoryName: item.categoryName
+  });
+
+  html += '<div class="review-question">' + escapeHtml(item.stem || item.question || '') + '</div>';
+
+  if (item.stemTable) {
+    html += renderDataTable(item.stemTable, 'question-table');
+  }
+
+  if (item.stemImage) {
+    html += renderImage(item.stemImage, '問題画像', 'question-image');
+  }
+
+  return html;
+}
+
+  function renderReviewExplanationBody(item) {
+    var html = '';
+
+    html += '<div class="explanation-title">解説</div>';
+    html += '<div class="explanation-body">' +
+      escapeHtml(item.explanation || '解説は未設定です。') +
+    '</div>';
+
+    if (item.explanationTable) {
+      html += renderDataTable(item.explanationTable, 'explanation-table');
+    }
+
+    if (item.explanationImage) {
+      html += renderImage(item.explanationImage, '解説画像', 'explanation-image');
+    }
+
+    return html;
   }
 
   function shuffleArray(array) {
@@ -91,10 +231,19 @@
       category: q.category || 'all',
       categoryName: q.categoryName || '',
       year: q.year || null,
+
       question: q.question || q.stem || '問題文が設定されていません。',
+      stem: q.stem || q.question || '問題文が設定されていません。',
+
+      stemTable: q.stemTable || q.questionTable || null,
+      stemImage: q.stemImage || q.questionImage || '',
+
       options: options,
       answer: answerIndex,
-      explanation: q.explanation || ''
+      explanation: q.explanation || '',
+
+      explanationTable: q.explanationTable || null,
+      explanationImage: q.explanationImage || ''
     };
   }
 
@@ -164,11 +313,13 @@
           categories: {}
         };
       }
+
       var parsed = JSON.parse(raw);
       if (!parsed || typeof parsed !== 'object') throw new Error('invalid');
       if (!parsed.categories || typeof parsed.categories !== 'object') parsed.categories = {};
       if (typeof parsed.totalAnswered !== 'number') parsed.totalAnswered = 0;
       if (typeof parsed.totalCorrect !== 'number') parsed.totalCorrect = 0;
+
       return parsed;
     } catch (e) {
       return {
@@ -334,7 +485,11 @@
   }
 
   function saveQuizSession(session) {
-    sessionStorage.setItem('quizSession', JSON.stringify(session));
+    try {
+      sessionStorage.setItem('quizSession', JSON.stringify(session));
+    } catch (e) {
+      alert('セッション保存に失敗しました。ブラウザのストレージ設定を確認してください。');
+    }
   }
 
   function loadQuizSession() {
@@ -348,7 +503,11 @@
   }
 
   function saveQuizResult(result) {
-    sessionStorage.setItem('quizResult', JSON.stringify(result));
+    try {
+      sessionStorage.setItem('quizResult', JSON.stringify(result));
+    } catch (e) {
+      alert('結果保存に失敗しました。ブラウザのストレージ設定を確認してください。');
+    }
   }
 
   function loadQuizResult() {
@@ -455,44 +614,36 @@
   }
 
   function handleInstallApp() {
-  var ua = navigator.userAgent || '';
-  var isIOS = /iPhone|iPad|iPod/i.test(ua);
-  var isAndroid = /Android/i.test(ua);
-  var isWindows = /Windows/i.test(ua);
+    var ua = navigator.userAgent || '';
+    var isIOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    var isWindows = /Windows/i.test(ua);
 
-  if (deferredInstallPrompt) {
-    deferredInstallPrompt.prompt();
-    deferredInstallPrompt.userChoice.then(function () {
-      deferredInstallPrompt = null;
-    });
-    return;
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(function () {
+        deferredInstallPrompt = null;
+      });
+      return;
+    }
+
+    if (isIOS) {
+      alert('iPhone / iPad では、Safari の共有ボタンから「ホーム画面に追加」を選んでください。');
+      return;
+    }
+
+    if (isAndroid) {
+      alert('Android では、ブラウザのメニューから「ホーム画面に追加」または「アプリをインストール」を選んでください。');
+      return;
+    }
+
+    if (isWindows) {
+      alert('Windows では、Chrome または Edge のメニューから「アプリをインストール」または「このサイトをアプリとしてインストール」を選んでください。');
+      return;
+    }
+
+    alert('この端末では、ブラウザのメニューから「ホーム画面に追加」または「アプリをインストール」を選んでください。');
   }
-
-  if (isIOS) {
-    alert(
-      'iPhone / iPad では、Safari の共有ボタンから「ホーム画面に追加」を選んでください。'
-    );
-    return;
-  }
-
-  if (isAndroid) {
-    alert(
-      'Android では、ブラウザのメニューから「ホーム画面に追加」または「アプリをインストール」を選んでください。'
-    );
-    return;
-  }
-
-  if (isWindows) {
-    alert(
-      'Windows では、Chrome または Edge のメニューから「アプリをインストール」または「このサイトをアプリとしてインストール」を選んでください。'
-    );
-    return;
-  }
-
-  alert(
-    'この端末では、ブラウザのメニューから「ホーム画面に追加」または「アプリをインストール」を選んでください。'
-  );
-}
 
   function initTopPage() {
     var startForm = document.getElementById('startForm');
@@ -620,13 +771,15 @@
       if (progressText) progressText.textContent = number + ' / ' + total;
       if (progressFill) progressFill.style.width = ((number / total) * 100) + '%';
       if (questionNumber) questionNumber.textContent = '第' + number + '問';
-      if (questionText) questionText.textContent = current.question;
+      if (questionText) questionText.innerHTML = renderQuestionBody(current);
 
       if (feedbackArea) feedbackArea.classList.add('hidden');
+
       if (answerStatus) {
         answerStatus.className = 'answer-status';
         answerStatus.textContent = '';
       }
+
       if (explanationBox) explanationBox.innerHTML = '';
       if (nextButton) nextButton.classList.add('hidden');
 
@@ -646,16 +799,25 @@
 
           var isCorrect = index === current.answer;
 
-          session.answers.push({
-            questionId: current.id,
-            question: current.question,
-            options: current.options.slice(),
-            selectedIndex: index,
-            correctIndex: current.answer,
-            explanation: current.explanation,
-            isCorrect: isCorrect,
-            category: current.category
-          });
+        session.answers.push({
+  questionId: current.id,
+  question: current.question,
+  stem: current.stem,
+  stemTable: current.stemTable,
+  stemImage: current.stemImage,
+
+  year: current.year,
+  category: current.category,
+  categoryName: current.categoryName,
+
+  options: current.options.slice(),
+  selectedIndex: index,
+  correctIndex: current.answer,
+  explanation: current.explanation,
+  explanationTable: current.explanationTable,
+  explanationImage: current.explanationImage,
+  isCorrect: isCorrect
+});
 
           if (isCorrect) session.score += 1;
 
@@ -678,15 +840,7 @@
             if (isMock) {
               explanationBox.innerHTML = '';
             } else {
-              var correctText = current.options[current.answer] || '';
-              explanationBox.innerHTML =
-                '<div class="explanation-title">解説</div>' +
-                '<div class="explanation-answer">正解: ' +
-                escapeHtml(String.fromCharCode(65 + current.answer) + '. ' + correctText) +
-                '</div>' +
-                '<div class="explanation-body">' +
-                escapeHtml(current.explanation || '解説は未設定です。') +
-                '</div>';
+              explanationBox.innerHTML = renderExplanationBody(current);
             }
           }
 
@@ -762,7 +916,9 @@
             (item.isCorrect ? '正解' : '不正解') +
           '</div>' +
         '</div>' +
-        '<div class="review-question">' + escapeHtml(item.question) + '</div>' +
+
+        renderReviewQuestionBody(item) +
+
         '<div class="review-answer-block">' +
           '<div class="review-line"><span class="review-label">あなたの解答</span><span class="review-user ' + (item.isCorrect ? 'text-correct' : 'text-incorrect') + '">' +
             escapeHtml(String.fromCharCode(65 + item.selectedIndex) + '. ' + selectedText) +
@@ -771,9 +927,9 @@
             escapeHtml(String.fromCharCode(65 + item.correctIndex) + '. ' + correctText) +
           '</span></div>' +
         '</div>' +
+
         '<div class="review-explanation">' +
-          '<div class="explanation-title">解説</div>' +
-          '<div class="explanation-body">' + escapeHtml(item.explanation || '解説は未設定です。') + '</div>' +
+          renderReviewExplanationBody(item) +
         '</div>' +
       '</article>';
   }
@@ -853,15 +1009,15 @@
   }
 
   function setupInstallPromptListener() {
-  window.addEventListener('beforeinstallprompt', function (e) {
-    e.preventDefault();
-    deferredInstallPrompt = e;
-  });
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
 
-  window.addEventListener('appinstalled', function () {
-    deferredInstallPrompt = null;
-  });
-}
+    window.addEventListener('appinstalled', function () {
+      deferredInstallPrompt = null;
+    });
+  }
 
   function boot() {
     setupInstallPromptListener();
