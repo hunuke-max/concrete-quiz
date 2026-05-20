@@ -78,13 +78,13 @@ explanationImage: "assets/explanations/2020-a-001-exp.png",
   excluded: false
 },
   {
-    id: "2020-a-001",
+    id: "2020-a-003",
     year: 2020,
     category: "a",
     categoryName: "材料",
     sourceKind: "rewritten_from_past_exam",
     stem: "下表は、粗骨材のふるい分け試験結果を示したものである。この粗骨材の粗粒率として、正しいものはどれか。",
-　　stemImage: "assets/questions/2020-a-002.png",
+　  stemImage: "assets/questions/2020-a-002.png",
     options: [
       "5.62。",
       "5.92。",
@@ -92,7 +92,7 @@ explanationImage: "assets/explanations/2020-a-001-exp.png",
       "6.92。"
     ],
     answerIndex: 2,
-    explanation: 適当なものは3です。",
+    explanation: "適当なものは3です。",
 
     explanationBlocks: [
    {
@@ -102,7 +102,7 @@ explanationImage: "assets/explanations/2020-a-001-exp.png",
     のとおりである。,`
     },
    {
-　　image: "assets/explanations/2020-a-003-1-exp.png",
+　  image: "assets/explanations/2020-a-003-1-exp.png",
     alt:"「ふるいにとどまる質量百分率」",
     caption: "図1：ふるいにとどまる質量百分率"
 },
@@ -114,12 +114,12 @@ explanationImage: "assets/explanations/2020-a-001-exp.png",
 設間では,0.6,0,3および0.15mmのふるいにとどまる質量分率(値はいずれも100(%))も加算する。したがって,設間の粗骨材の粗粒率は,次のように求めることができる。
 粗骨材の粗粒率
 =(5+65+95+97+100+100+100+100)/100
-=6.62　
-}　`
+=6.62`　
+}
 ],
     originalYear: 2020,
     originalQuestionNo: null,
-    tags: ["水セメント比", "強度", "耐久性"],
+    tags: ["粗骨材", "ふるい分け", "粗粒率"],
     excluded: false
   },
 
@@ -137,7 +137,7 @@ explanationImage: "assets/explanations/2020-a-001-exp.png",
       "スランプは硬化後にのみ測定できる試験値である。"
     ],
     answerIndex: 1,
-    explanation: "スランプはフレッシュコンクリートの軟らかさや作業性の目安です。強度を直接示すものではなく、空気量や粘性など他条件も影響します。",
+    explanation: "スランプはフレッシュコンクリートの軟らかさや作業性の目安です。強度を直接示すものではなく、空気量  や粘性など他条件も影響します。",
     originalYear: 2025,
     originalQuestionNo: null,
     tags: ["スランプ", "フレッシュコンクリート", "施工性"],
