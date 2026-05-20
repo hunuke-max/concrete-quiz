@@ -166,9 +166,9 @@ explanationImage: "assets/explanations/2020-a-001-exp.png",
 以上より,選択肢(1)が正解(不適当)である。
 }
 ],
-    originalYear: 2025,
+    originalYear: 2020,
     originalQuestionNo: null,
-    tags: ["スランプ", "フレッシュコンクリート", "施工性"],
+    tags: ["混和剤", "フレッシュコンクリート", "施工性"],
     excluded: false
   },
   {
