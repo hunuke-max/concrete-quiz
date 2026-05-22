@@ -177,8 +177,8 @@ explanationImage: "assets/explanations/2020-a-001-exp.png",
     category: "b",
     categoryName: "配合",
     sourceKind: "original_practice",
-    stem: "普通ポルトランドセメントの一部を混和材で置換したコンクリートの性質に関する次の記述のうち,
-不適当なものはどれか。",
+    stem: `普通ポルトランドセメントの一部を混和材で置換したコンクリートの性質に関する次の記述のうち,
+不適当なものはどれか。`,
     options: [
       "(1)50%を高炉スラグ微粉未4000で置換すると,長期強度が高くなる。。",
       "(2)50%を高炉スラグ微粉末4000で置換すると,中性化速度が速くなる",
@@ -198,7 +198,7 @@ explanationImage: "assets/explanations/2020-a-001-exp.png",
 したがつて,記述は適当である。`
 },
 {
-image: "assets/explanations/スクリーンショット 2026-05-20 165354.png",
+image: "assets/explanations/2020-b-001-1-exp.png",
     alt:"「高炉スラグ微粉末の品質」",
     caption: "図1：高炉スラグ微粉末の品質」"
 },
@@ -223,7 +223,7 @@ text:`(2) ポルトランドセメントの一部を高炉スラグ微粉末で�
 う。`
 },
 {
-image: "assets/explanations/スクリーンショット 2026-05-20 165445.png",
+image: "assets/explanations/2020-b-001-2-exp.png",
     alt:"「フライアッシュの品質」",
     caption: "図2：フライアッシュの品質"
 },
