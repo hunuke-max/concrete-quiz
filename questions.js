@@ -812,9 +812,9 @@ text:`(4)JIS A 5308附属書Bでは,「B.5安全と認められる骨材を使�
 }
 ],
 
-    originalYear: 2024,
+    originalYear: 2020,
     originalQuestionNo: null,
-    tags: ["空気量", "AE", "配合管理"],
+    tags: ["アルカリシリカ反応性対策", "混合セメント", "配合管理"],
     excluded: false
   },
   {
