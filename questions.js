@@ -478,8 +478,7 @@ text:`⑥単位容積質量の算出
     category: "b",
     categoryName: "配合",
     sourceKind: "original_practice",
-    stem: "フレッシュコンク1ジートの粗骨材とモルタルの分離に関する次の一般約な記述のうち,不適当なも
-のはどれか。",
+    stem: "フレッシュコンク1ジートの粗骨材とモルタルの分離に関する次の一般約な記述のうち,不適当なものはどれか。",
     options: [
       "(1)組骨材率を大きくすると,分離しやすくなる。",
       "(2)糧骨材の最大寸法を大きくすると,分離しやすくなるc",
@@ -509,7 +508,7 @@ text:`(4）水セメント比を大きく,すなわち,セメントに対する�
 }
 ],
 
-    originalYear: 2025,
+    originalYear: 2020,
     originalQuestionNo: null,
     tags: ["材料受入れ", "品質証明", "工場管理"],
     excluded: false
